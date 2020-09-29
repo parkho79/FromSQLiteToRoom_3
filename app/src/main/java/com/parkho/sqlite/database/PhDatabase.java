@@ -11,13 +11,19 @@ import com.parkho.sqlite.PhDatabaseContract;
 
 @Database(
         entities = {PhStudentEntity.class},
-        version = 2
+        version = 3
 )
 public abstract class PhDatabase extends RoomDatabase {
 
     public abstract PhStudentDao studentDao();
 
-    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+    /**
+     * Migrate from:
+     * version 2 - using the SQLiteDatabase API
+     * to
+     * version 3 - using Room
+     */
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(SupportSQLiteDatabase a_database) {
             // Since we didn't alter the table, there's nothing else to do here.
@@ -54,7 +60,7 @@ public abstract class PhDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(a_context.getApplicationContext(),
                             PhDatabase.class, PhDatabaseContract.DATABASE_NAME)
-                            .addMigrations(MIGRATION_1_2)
+                            .addMigrations(MIGRATION_2_3)
                             .build();
                 }
             }
